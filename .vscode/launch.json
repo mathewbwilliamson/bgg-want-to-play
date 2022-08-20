@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "BGG API Lambda",
-      "program": "${env:APPDATA}/npm/node_modules/@aws-amplify/cli/bin/amplify",
+      "program": "${env:APPDATA}/npm/node_modules/@aws-amplify/cli/lib",
       "args": [
         "function",
         "invoke",

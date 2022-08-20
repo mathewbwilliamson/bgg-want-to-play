@@ -11,7 +11,9 @@ const WantToPlay = () => {
     e.preventDefault();
 
     const payload = {
-      searchTerm: search,
+      body: {
+        searchTerm: search,
+      },
     };
 
     const res = await API.post(bggApi, "/bgg-api/search", payload);
