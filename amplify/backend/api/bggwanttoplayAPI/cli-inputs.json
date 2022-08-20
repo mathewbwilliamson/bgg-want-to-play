@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/bgg-want-to-play": {
+      "name": "/bgg-want-to-play",
+      "lambdaFunction": "bggwanttoplayLAMBDA",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

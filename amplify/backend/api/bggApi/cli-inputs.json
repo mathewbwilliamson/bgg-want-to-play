@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/bgg-api": {
+      "name": "/bgg-api",
+      "lambdaFunction": "bggApiLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

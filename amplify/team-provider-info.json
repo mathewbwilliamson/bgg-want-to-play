@@ -1,0 +1,31 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bggwanttoplay-dev-224811-authRole",
+      "UnauthRoleArn": "arn:aws:iam::479404119771:role/amplify-bggwanttoplay-dev-224811-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::479404119771:role/amplify-bggwanttoplay-dev-224811-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
+      "UnauthRoleName": "amplify-bggwanttoplay-dev-224811-unauthRole",
+      "StackName": "amplify-bggwanttoplay-dev-224811",
+      "StackId": "arn:aws:cloudformation:us-east-1:479404119771:stack/amplify-bggwanttoplay-dev-224811/091c7ef0-1dd7-11ed-a01c-12a4e5696267",
+      "AmplifyAppId": "d30z63sd777gxf"
+    },
+    "categories": {
+      "auth": {
+        "bggwanttoplay022325de": {},
+        "true": {}
+      },
+      "function": {
+        "bggwanttoplayLAMBDA": {
+          "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
+          "s3Key": "amplify-builds/bggwanttoplayLAMBDA-7241662b6f614d654f4b-build.zip"
+        },
+        "bggApiLambda": {
+          "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
+          "s3Key": "amplify-builds/bggApiLambda-49487a74775645766d42-build.zip"
+        }
+      }
+    }
+  }
+}
