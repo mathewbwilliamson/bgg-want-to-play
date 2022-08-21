@@ -1,11 +1,11 @@
 {
   "httpMethod": "POST",
-  "path": "/bgg-api/search",
+  "path": "/bgg-api/boardgame",
   "queryStringParameters": {
     "limit": "10"
   },
   "headers": {
     "Content-Type": "application/json"
   },
-  "body": "{\"searchTerm\":\"agricola\"}"
+  "body": "{\"bggId\":\"31260\"}"
 }

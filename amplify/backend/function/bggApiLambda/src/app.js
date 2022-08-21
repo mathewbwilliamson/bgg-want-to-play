@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
-const { searchBggBoardgame } = require("./bggService");
+const { searchBggBoardgame, getBggBoardgameById } = require("./bggService");
 
 // declare a new express app
 const app = express();
@@ -44,10 +44,44 @@ app.post("/bgg-api/search", async function (req, res) {
 
   console.log("\x1b[41m%s \x1b[0m", "FIXME: [matt] searchTerm", searchTerm);
 
-  const searchResults = await searchBggBoardgame(searchTerm);
+  try {
+    const searchResults = await searchBggBoardgame(searchTerm);
 
-  // Add your code here
-  res.json({ success: "Search Successful", searchResults });
+    res.json({ success: "Search Successful", searchResults });
+  } catch (e) {
+    console.error(
+      "There was a problem with searching via searchTerm: ",
+      searchTerm
+    );
+    console.error(e);
+  }
+});
+
+app.post("/bgg-api/boardgame", async function (req, res) {
+  const { bggId } = req.body;
+  console.log("\x1b[42m%s \x1b[0m", "FIXME: [matt] req.body", req.body);
+
+  if (!bggId) {
+    throw new Error("BGG Id is empty");
+  }
+
+  console.log("\x1b[41m%s \x1b[0m", "FIXME: [matt] bggId", bggId);
+
+  try {
+    const boardgameResult = await getBggBoardgameById(bggId);
+    console.log(
+      "\x1b[42m%s \x1b[0m",
+      "FIXME: [matt] boardgameResult",
+      boardgameResult
+    );
+    res.json({ success: "Search Successful", boardgameResult });
+  } catch (e) {
+    console.error(
+      "There was a problem with getting the boardgame via bggId",
+      bggId
+    );
+    console.error(e);
+  }
 });
 
 app.post("/bgg-api/*", function (req, res) {
