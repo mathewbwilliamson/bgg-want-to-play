@@ -10,19 +10,7 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientID": "string"
         }
     },
-    "storage": {
-        "bggwanttoplays3": {
-            "BucketName": "string",
-            "Region": "string"
-        }
-    },
     "function": {
-        "bggwanttoplayLAMBDA": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "bggApiLambda": {
             "Name": "string",
             "Arn": "string",
@@ -31,11 +19,6 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "bggwanttoplayAPI": {
-            "RootUrl": "string",
-            "ApiName": "string",
-            "ApiId": "string"
-        },
         "bggApi": {
             "RootUrl": "string",
             "ApiName": "string",

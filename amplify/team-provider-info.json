@@ -17,13 +17,9 @@
         "true": {}
       },
       "function": {
-        "bggwanttoplayLAMBDA": {
-          "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
-          "s3Key": "amplify-builds/bggwanttoplayLAMBDA-7241662b6f614d654f4b-build.zip"
-        },
         "bggApiLambda": {
           "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
-          "s3Key": "amplify-builds/bggApiLambda-504a476f495849526a36-build.zip"
+          "s3Key": "amplify-builds/bggApiLambda-6c38722f546676524a73-build.zip"
         }
       }
     }

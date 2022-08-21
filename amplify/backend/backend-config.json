@@ -27,20 +27,8 @@
       }
     }
   },
-  "storage": {
-    "bggwanttoplays3": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    }
-  },
+  "storage": {},
   "function": {
-    "bggwanttoplayLAMBDA": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
-    },
     "bggApiLambda": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -48,20 +36,6 @@
     }
   },
   "api": {
-    "bggwanttoplayAPI": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "bggwanttoplayLAMBDA",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    },
     "bggApi": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
