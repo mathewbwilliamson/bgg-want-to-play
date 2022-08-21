@@ -16,41 +16,23 @@ app.use(function (req, res, next) {
   next();
 });
 
-/**********************
- * Example get method *
- **********************/
-
-app.get("/bgg-api", function (req, res) {
-  // Add your code here
-  res.json({ success: "get call succeed!", url: req.url });
-});
-
-app.get("/bgg-api/*", function (req, res) {
-  // Add your code here
-  res.json({ success: "get call succeed!", url: req.url });
-});
-
-/****************************
- * Example post method *
- ****************************/
-
 app.post("/bgg-api/search", async function (req, res) {
+  console.log("LOG: req.body", req.body);
+
   const { searchTerm } = req.body;
-  console.log("\x1b[42m%s \x1b[0m", "FIXME: [matt] req.body", req.body);
 
   if (!searchTerm) {
     throw new Error("Search Term is empty");
   }
 
-  console.log("\x1b[41m%s \x1b[0m", "FIXME: [matt] searchTerm", searchTerm);
-
   try {
     const searchResults = await searchBggBoardgame(searchTerm);
+    console.log("LOG: searchResults", searchResults);
 
     res.json({ success: "Search Successful", searchResults });
   } catch (e) {
     console.error(
-      "There was a problem with searching via searchTerm: ",
+      "ERROR! There was a problem with searching via searchTerm: ",
       searchTerm
     );
     console.error(e);
@@ -58,63 +40,26 @@ app.post("/bgg-api/search", async function (req, res) {
 });
 
 app.post("/bgg-api/boardgame", async function (req, res) {
+  console.log("LOG: req.body", req.body);
+
   const { bggId } = req.body;
-  console.log("\x1b[42m%s \x1b[0m", "FIXME: [matt] req.body", req.body);
 
   if (!bggId) {
     throw new Error("BGG Id is empty");
   }
 
-  console.log("\x1b[41m%s \x1b[0m", "FIXME: [matt] bggId", bggId);
-
   try {
     const boardgameResult = await getBggBoardgameById(bggId);
-    console.log(
-      "\x1b[42m%s \x1b[0m",
-      "FIXME: [matt] boardgameResult",
-      boardgameResult
-    );
-    res.json({ success: "Search Successful", boardgameResult });
+    console.log("LOG: boardgameResult", boardgameResult);
+
+    res.json({ success: "Boardgame Find Successful", boardgameResult });
   } catch (e) {
     console.error(
-      "There was a problem with getting the boardgame via bggId",
+      "ERROR! There was a problem with getting the boardgame via bggId",
       bggId
     );
     console.error(e);
   }
-});
-
-app.post("/bgg-api/*", function (req, res) {
-  // Add your code here
-  res.json({ success: "post call succeed!", url: req.url, body: req.body });
-});
-
-/****************************
- * Example put method *
- ****************************/
-
-app.put("/bgg-api", function (req, res) {
-  // Add your code here
-  res.json({ success: "put call succeed!", url: req.url, body: req.body });
-});
-
-app.put("/bgg-api/*", function (req, res) {
-  // Add your code here
-  res.json({ success: "put call succeed!", url: req.url, body: req.body });
-});
-
-/****************************
- * Example delete method *
- ****************************/
-
-app.delete("/bgg-api", function (req, res) {
-  // Add your code here
-  res.json({ success: "delete call succeed!", url: req.url });
-});
-
-app.delete("/bgg-api/*", function (req, res) {
-  // Add your code here
-  res.json({ success: "delete call succeed!", url: req.url });
 });
 
 app.use((err, req, res, next) => {

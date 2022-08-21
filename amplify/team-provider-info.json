@@ -23,7 +23,7 @@
         },
         "bggApiLambda": {
           "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
-          "s3Key": "amplify-builds/bggApiLambda-376667726b5a5368334e-build.zip"
+          "s3Key": "amplify-builds/bggApiLambda-504a476f495849526a36-build.zip"
         }
       }
     }
