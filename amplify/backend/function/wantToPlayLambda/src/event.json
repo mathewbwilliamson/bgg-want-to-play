@@ -1,0 +1,38 @@
+{
+  "httpMethod": "GET",
+  "path": "/want-to-play",
+  "queryStringParameters": {
+    "limit": "10"
+  },
+  "headers": {
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-ASN": "5650",
+    "CloudFront-Viewer-Country": "US",
+    "Host": "iv4jlde9jf.execute-api.us-east-1.amazonaws.com",
+    "origin": "http://localhost:3000",
+    "Referer": "http://localhost:3000/",
+    "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"104\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "cross-site",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+    "Via": "2.0 ad49ff8ff03d68efb9eb939751d77c56.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "hogkrt1nsahhBdNhrs0Gz8-SzFGzv6coqdUS-GG8Z6LUz26vsF0hCA==",
+    "x-amz-date": "20220822T011201Z",
+    "X-Amz-Security-Token": "IQoJb3JpZ2luX2VjEPL//////////wEaCXVzLWVhc3QtMSJGMEQCIG6yHsxBLuDQ+tEnEBockI6cfEv+Jc3yKUsH+/I/LqGfAiACV6ywmlmwADZFaUABQvw3gv9rmsL0K8oL+oSgQZw4XirEBAhqEAIaDDQ3OTQwNDExOTc3MSIMNdRZD8gIUFxz4A1/KqEE4ruArGfz9hO2Sb6wBAq6qScskVCliQNxkcrmJZzFgNPTVaHxZlMC4c3TwI4AeWe+4zyE8wlInWNA+kydVuW+I3aK/jj434FN68/aT0uevIAEWlYWadImrtb9mzT5QzoVCEr8vqzjbCHTXhe65PCnEXrXj4pUeJJ5qept+3H6k5UGvx9uvEdb9eu0wNOkw6dk0j2S1P7R/4BJ/1s4RB4pLQxIjrc69yve8Jk9Z9ku9Csvntqrm5p7N+EhTowyU95A02mUhRSd9OacrwnUWThDxfDmQctDhCLdALdntRjW9KkNfnqIt8tHvQUGs5wC6Z1b0Lc1tmCupC+TdwnIzkaqIg+vM0Ov6sp/zu2IvInPshkReLUDzuZP6onhVwhUBSGylgMs85mMf2663Ay92IUHkrrqR7S69iPplF3yWkj8ERntSCpTmZWOkKxjyvCFgLF+2grJzoD8GdcGkmKztKlUxwklpcPhQbTUwf1yhrBeegr/oRFrj3G1cAjOR5DU2BKE4BztimOBYGx8JnJXtOO/2OeFv9MpIq1UrJN5nXQCZ0C4RzPatH7dhHAOJCaG+tJjcqdUP0vd3oi4WytCPRkz40IDjl/h0HzcUwQ8onapgJiiIEL9pP/WYAe2m6fdyCNZHOcyamTcYCbDhZ+Obs44zEGbZ52BBHxR1LP1y48bHObtYNwUN+KdW4+jnpWFtJUEWPaS2XChNNtfhSan35GwAmkw4a+LmAY6hgJ8cMvetm01Gkek/s69QkeXUUoxJSfyZNJqCgBifksH7/77OBGCgLffD4zzwYdY9SSp0+DuxB7QtaBwKBBj0QclT0drMb/GYE5O15obSunii05oRik1Zfb0bMyDQouW1vPCDMM5+lgWPxl+HporJXPZsYZk3jbXgbgjJMJw48CjsKKDn+e9GSMDoCP8t/JlwJgpfaS0RGpN+J/b2+D9ELw4qVmO9TtpI470VKHm8JWJDUEJzN/q7qc39ega9V5gpFSmJC1VDARHyv5/YuLtWcRYGiAx2aOPXqYlRElWcyKnHdBR5dTA3SNju4Hd5jlMEwG/CB53mfLiy3avbMmi56/DEX9aD/8c",
+    "X-Amzn-Trace-Id": "Root=1-6302d7e1-415211d42861a251319e871c",
+    "X-Forwarded-For": "47.197.4.232, 130.176.214.166",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "body": "{\"msg\":\"Hello from the event.json body\"}"
+}

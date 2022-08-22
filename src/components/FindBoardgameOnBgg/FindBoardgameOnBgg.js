@@ -1,5 +1,6 @@
 import React from "react";
 import { getBoardgameBggApi } from "../../api/bggApi";
+import { getAllBoardgamesFromDb } from "../../api/wantToPlayApi";
 
 export const FindBoardgameOnBgg = () => {
   const [bggId, setBggId] = React.useState("");
@@ -23,6 +24,14 @@ export const FindBoardgameOnBgg = () => {
         onChange={(e) => setBggId(e.target.value)}
       />
       <input type="submit" value="Get Game" onClick={handleSubmit} />
+      <button
+        onClick={async () => {
+          const thing = await getAllBoardgamesFromDb();
+          console.log("\x1b[41m%s \x1b[0m", "FIXME: [matt] thing", thing);
+        }}
+      >
+        Get All from DB
+      </button>
     </div>
   );
 };

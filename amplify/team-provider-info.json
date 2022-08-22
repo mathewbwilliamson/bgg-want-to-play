@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-bggwanttoplay-dev-224811-unauthRole",
       "StackName": "amplify-bggwanttoplay-dev-224811",
       "StackId": "arn:aws:cloudformation:us-east-1:479404119771:stack/amplify-bggwanttoplay-dev-224811/091c7ef0-1dd7-11ed-a01c-12a4e5696267",
-      "AmplifyAppId": "d30z63sd777gxf"
+      "AmplifyAppId": "d30z63sd777gxf",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-bggwanttoplay-dev-224811-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -20,6 +21,10 @@
         "bggApiLambda": {
           "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
           "s3Key": "amplify-builds/bggApiLambda-6c38722f546676524a73-build.zip"
+        },
+        "wantToPlayLambda": {
+          "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
+          "s3Key": "amplify-builds/wantToPlayLambda-2f3564714b6d74425837-build.zip"
         }
       }
     }

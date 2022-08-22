@@ -2,6 +2,7 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import React from "react";
 import { FindBoardgameOnBgg } from "../src/components/FindBoardgameOnBgg/FindBoardgameOnBgg";
 import { SearchBgg } from "../src/components/SearchBgg/SearchBgg";
+import { TestWantToPlayApi } from "../src/components/TestWantToPlayApi/TestWantToPlayApi";
 
 const WantToPlay = () => {
   return (
@@ -9,6 +10,7 @@ const WantToPlay = () => {
       <h1>HELLO</h1>
       <SearchBgg />
       <FindBoardgameOnBgg />
+      <TestWantToPlayApi />
     </div>
   );
 };

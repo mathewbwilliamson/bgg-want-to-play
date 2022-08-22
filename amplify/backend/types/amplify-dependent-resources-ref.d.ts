@@ -10,8 +10,24 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientID": "string"
         }
     },
+    "storage": {
+        "wantToPlayDynamo": {
+            "Name": "string",
+            "Arn": "string",
+            "StreamArn": "string",
+            "PartitionKeyName": "string",
+            "PartitionKeyType": "string",
+            "Region": "string"
+        }
+    },
     "function": {
         "bggApiLambda": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "wantToPlayLambda": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -20,6 +36,11 @@ export type AmplifyDependentResourcesAttributes = {
     },
     "api": {
         "bggApi": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
+        },
+        "wantToPlayApi": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"
