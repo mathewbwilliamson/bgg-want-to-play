@@ -15,6 +15,9 @@ const AWS = require("aws-sdk");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const bodyParser = require("body-parser");
 const express = require("express");
+const { getPlayItemFromRequest } = require("./models/wantToPlay.model");
+const { getUserId } = require("./utilities/user.utils");
+const { scanTable } = require("./utilities/db.utils");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
@@ -62,51 +65,27 @@ const convertUrlType = (param, type) => {
  * HTTP Get method for list objects *
  ********************************/
 
-app.get(path, function (req, res) {
-  console.log("FIXME: [matt] req.apiGateway", req.apiGateway);
+app.get(path, async function (req, res) {
+  console.log("DEBUG req.body", req.body);
+  const userId = getUserId(req);
 
-  console.log(
-    "FIXME: [matt] req.apiGateway.event.requestContext.identity",
-    req.apiGateway.event.requestContext.identity
-  );
-  console.log("FIXME: [matt] partitionKeyName", partitionKeyName);
-  const condition = {};
-  condition[partitionKeyName] = {
-    ComparisonOperator: "EQ",
-  };
-
-  if (userIdPresent && req.apiGateway) {
-    condition[partitionKeyName]["AttributeValueList"] = [
-      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH,
-    ];
-  } else {
-    try {
-      condition[partitionKeyName]["AttributeValueList"] = [
-        convertUrlType(req.params[partitionKeyName], partitionKeyType),
-      ];
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: "Wrong column type " + err });
-    }
+  if (!userId) {
+    res.statusCode = 500;
+    return res.json({ error: err, url: req.url, body: req.body });
   }
 
-  let queryParams = {
-    TableName: tableName,
-    KeyConditions: condition,
-  };
-  console.log(
-    "\x1b[43m%s \x1b[0m",
-    "FIXME: [matt] queryParams.KeyConditions.bggId.AttributeValueList",
-    queryParams.KeyConditions.bggId.AttributeValueList
-  );
-  dynamodb.query(queryParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: "Could not load items: " + err });
-    } else {
-      res.json(data.Items);
-    }
-  });
+  const items = await scanTable(tableName);
+  console.log("\x1b[43m%s \x1b[0m", "FIXME: [matt] items", items);
+
+  // dynamodb.query(queryParams, (err, data) => {
+  //   if (err) {
+  //     res.statusCode = 500;
+  //     res.json({ error: "Could not load items: " + err });
+  //   } else {
+  //     res.json(data.Items);
+  //   }
+  // });
+  return items;
 });
 
 /*****************************************
@@ -190,15 +169,23 @@ app.put(path, function (req, res) {
  *************************************/
 
 app.post(path, function (req, res) {
-  if (userIdPresent) {
-    req.body["userId"] =
-      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
+  console.log("DEBUG POST req.body", req.body);
+  const userId = getUserId(req);
+
+  if (!userId) {
+    res.statusCode = 500;
+    return res.json({ error: err, url: req.url, body: req.body });
   }
 
-  let putItemParams = {
+  const postItem = getPlayItemFromRequest(req, userId);
+
+  console.log("DEBUG POST postItem", postItem);
+
+  const putItemParams = {
     TableName: tableName,
-    Item: req.body,
+    Item: postItem,
   };
+
   dynamodb.put(putItemParams, (err, data) => {
     if (err) {
       res.statusCode = 500;

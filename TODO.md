@@ -14,5 +14,18 @@
 - DONE How does the template.json match with the template.yml?
 - DONE Add bggApi API: Will be for doing the calls to the BGG API
 - Add wantToPlayAPI API: Will be for all things that I want to do after the BGG API, includes connecction to the DB that I setup.
-- Figure out how to connect the DB into wantToPlayAPI: want-to-play is path
+- POST Endpoint
+  - isPlayed: boolean
+  - bggId: string
+  - notes: string
+  - playDate: string
+  - userId: string
+- PATCH endpoint (scoped by user)
+  - Payload will allowed to be isPlayed, bggId, notes, playDate
+  - Get current item in the DB by bggId and userId === context.userId
+- DELETE endpoint (scoped by user)
+- GET one endpoint (scoped by user)
+- GET ALL endpoint (scoped by user)
+  - Return all games by UserId.
+- DONE Figure out how to connect the DB into wantToPlayAPI: want-to-play is path
 - How do I get a user ID that I can use in the app?
