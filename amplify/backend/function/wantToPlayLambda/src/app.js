@@ -17,13 +17,13 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const { getPlayItemFromRequest } = require("./models/wantToPlay.model");
 const { getUserId } = require("./utilities/user.utils");
-const { scanTable } = require("./utilities/db.utils");
+const { getUserCondition } = require("./utilities/db.utils");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = "wantToPlay";
+let tableName = "wantToPlayTbl";
 if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
 }
@@ -74,18 +74,21 @@ app.get(path, async function (req, res) {
     return res.json({ error: err, url: req.url, body: req.body });
   }
 
-  const items = await scanTable(tableName);
-  console.log("\x1b[43m%s \x1b[0m", "FIXME: [matt] items", items);
+  const queryParams = {
+    TableName: tableName,
+    KeyConditions: getUserCondition(userId),
+  };
 
-  // dynamodb.query(queryParams, (err, data) => {
-  //   if (err) {
-  //     res.statusCode = 500;
-  //     res.json({ error: "Could not load items: " + err });
-  //   } else {
-  //     res.json(data.Items);
-  //   }
-  // });
-  return items;
+  console.log("DEBUG queryParams", queryParams);
+
+  dynamodb.query(queryParams, (err, data) => {
+    if (err) {
+      res.statusCode = 500;
+      res.json({ error: "Could not load items: " + err });
+    } else {
+      res.json(data.Items);
+    }
+  });
 });
 
 /*****************************************

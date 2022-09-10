@@ -16,6 +16,14 @@
     "s3Key": {
       "Type": "String"
     },
+    "storagewantToPlayDynDbName": {
+      "Type": "String",
+      "Default": "storagewantToPlayDynDbName"
+    },
+    "storagewantToPlayDynDbArn": {
+      "Type": "String",
+      "Default": "storagewantToPlayDynDbArn"
+    },
     "storagewantToPlayDynamoName": {
       "Type": "String",
       "Default": "storagewantToPlayDynamoName"
@@ -23,6 +31,10 @@
     "storagewantToPlayDynamoArn": {
       "Type": "String",
       "Default": "storagewantToPlayDynamoArn"
+    },
+    "storagewantToPlayDynDbStreamArn": {
+      "Type": "String",
+      "Default": "storagewantToPlayDynDbArn"
     }
   },
   "Conditions": {
@@ -182,14 +194,14 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storagewantToPlayDynamoArn"
+                  "Ref": "storagewantToPlayDynDbArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storagewantToPlayDynamoArn"
+                        "Ref": "storagewantToPlayDynDbArn"
                       },
                       "index/*"
                     ]
@@ -199,6 +211,59 @@
             }
           ]
         }
+      }
+    },
+    "wantToPlayDynDbTriggerPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "lambda-trigger-policy-wantToPlayDynDb",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+              ],
+              "Resource": [
+                {
+                  "Ref": "storagewantToPlayDynDbStreamArn"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "wantToPlayDynDbTrigger": {
+      "Type": "AWS::Lambda::EventSourceMapping",
+      "DependsOn": [
+        "wantToPlayDynDbTriggerPolicy"
+      ],
+      "Properties": {
+        "BatchSize": 100,
+        "Enabled": true,
+        "EventSourceArn": {
+          "Ref": "storagewantToPlayDynDbStreamArn"
+        },
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LambdaFunction",
+            "Arn"
+          ]
+        },
+        "StartingPosition": "LATEST"
       }
     }
   },

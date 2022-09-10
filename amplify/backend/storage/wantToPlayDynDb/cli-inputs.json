@@ -1,0 +1,14 @@
+{
+  "resourceName": "wantToPlayDynDb",
+  "tableName": "wantToPlayTbl",
+  "partitionKey": {
+    "fieldName": "userId",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "bggId",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": ["wantToPlayLambda"]
+}
