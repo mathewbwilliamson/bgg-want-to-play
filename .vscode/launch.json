@@ -7,6 +7,20 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "WantToPlay API Lambda",
+      "program": "${env:APPDATA}/npm/node_modules/@aws-amplify/cli/lib",
+      "args": [
+        "function",
+        "invoke",
+        // replace this with the name of your function
+        // the folder in amplify/backend/function/
+        "wantToPlayLambda"
+      ],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "BGG API Lambda",
       "program": "${env:APPDATA}/npm/node_modules/@aws-amplify/cli/lib",
       "args": [

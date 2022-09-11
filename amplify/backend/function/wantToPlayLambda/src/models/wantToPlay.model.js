@@ -8,4 +8,26 @@ const getPlayItemFromRequest = (req, userId) => {
   };
 };
 
-module.exports = { getPlayItemFromRequest };
+const addCreateMetaData = (item, userId) => {
+  return {
+    ...item,
+    createdAt: new Date().toString(),
+    createdBy: userId,
+    updatedAt: new Date().toString(),
+    updatedBy: userId,
+  };
+};
+
+const addUpdateMetaData = (item, userId) => {
+  return {
+    ...item,
+    updatedAt: new Date().toString(),
+    updatedBy: userId,
+  };
+};
+
+module.exports = {
+  getPlayItemFromRequest,
+  addCreateMetaData,
+  addUpdateMetaData,
+};

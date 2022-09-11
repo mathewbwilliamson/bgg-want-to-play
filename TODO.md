@@ -27,7 +27,7 @@
   - Payload will allowed to be isPlayed, bggId, notes, playDate
   - Get current item in the DB by bggId and userId === context.userId
 - DELETE endpoint (scoped by user)
-- GET one endpoint (scoped by user)
+- DONE GET one endpoint (scoped by user)
 - DONE GET ALL endpoint (scoped by user)
 - DONE Figure out how to connect the DB into wantToPlayAPI: want-to-play is path
-- How do I get a user ID that I can use in the app?
+- DONE How do I get a user ID that I can use in the app?

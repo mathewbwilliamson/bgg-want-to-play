@@ -15,9 +15,13 @@ const AWS = require("aws-sdk");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const bodyParser = require("body-parser");
 const express = require("express");
-const { getPlayItemFromRequest } = require("./models/wantToPlay.model");
-const { getUserId } = require("./utilities/user.utils");
+const {
+  getPlayItemFromRequest,
+  addCreateMetaData,
+} = require("./models/wantToPlay.model");
+const { getUserId, userIdErrorHandling } = require("./utilities/user.utils");
 const { getUserCondition } = require("./utilities/db.utils");
+const { getSingleItemFromDb } = require("./repository/wantToPlay.repo");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
@@ -28,11 +32,12 @@ if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
 }
 
+console.log("woo");
 const userIdPresent = true; // TODO: update in case is required to use that definition
-const partitionKeyName = "bggId";
+const partitionKeyName = "userId";
 const partitionKeyType = "S";
-const sortKeyName = "";
-const sortKeyType = "";
+const sortKeyName = "bggId";
+const sortKeyType = "S";
 const hasSortKey = sortKeyName !== "";
 const path = "/want-to-play";
 const UNAUTH = "UNAUTH";
@@ -94,54 +99,62 @@ app.get(path, async function (req, res) {
 /*****************************************
  * HTTP Get method for get single object *
  *****************************************/
+app.get(path + "/item" + sortKeyPath, async function (req, res) {
+  try {
+    const userId = getUserId(req);
+    console.log("DEBUG userId", userId);
 
-app.get(path + "/object" + hashKeyPath + sortKeyPath, function (req, res) {
-  const params = {};
-  if (userIdPresent && req.apiGateway) {
-    params[partitionKeyName] =
-      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  } else {
-    params[partitionKeyName] = req.params[partitionKeyName];
-    try {
-      params[partitionKeyName] = convertUrlType(
-        req.params[partitionKeyName],
-        partitionKeyType
-      );
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: "Wrong column type " + err });
-    }
+    userIdErrorHandling(userId);
+
+    const bggId = req.params["bggId"];
+
+    const item = await getSingleItemFromDb(userId, bggId);
+
+    console.log("DEBUG item", item);
+
+    return res.json(item);
+  } catch (err) {
+    console.log("Error happened, 500 sent", err);
+    res.statusCode = 500;
+    return res.json({ error: err, url: req.url, body: req.body });
   }
-  if (hasSortKey) {
-    try {
-      params[sortKeyName] = convertUrlType(
-        req.params[sortKeyName],
-        sortKeyType
-      );
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: "Wrong column type " + err });
-    }
-  }
-
-  let getItemParams = {
-    TableName: tableName,
-    Key: params,
-  };
-
-  dynamodb.get(getItemParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: "Could not load items: " + err.message });
-    } else {
-      if (data.Item) {
-        res.json(data.Item);
-      } else {
-        res.json(data);
-      }
-    }
-  });
 });
+// app.get(path + "/item" + sortKeyPath, function (req, res) {
+//   const params = {};
+//   const userId = getUserId(req);
+
+//   if (!userId) {
+//     res.statusCode = 500;
+//     return res.json({ error: err, url: req.url, body: req.body });
+//   }
+
+//   params[partitionKeyName] = userId;
+
+//   try {
+//     params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+//   } catch (err) {
+//     res.statusCode = 500;
+//     res.json({ error: "Wrong column type " + err });
+//   }
+
+//   const getItemParams = {
+//     TableName: tableName,
+//     Key: params,
+//   };
+
+//   dynamodb.get(getItemParams, (err, data) => {
+//     if (err) {
+//       res.statusCode = 500;
+//       res.json({ error: "Could not load items: " + err.message });
+//     } else {
+//       if (data.Item) {
+//         res.json(data.Item);
+//       } else {
+//         res.json(data);
+//       }
+//     }
+//   });
+// });
 
 /************************************
  * HTTP put method for insert object *
@@ -186,7 +199,7 @@ app.post(path, function (req, res) {
 
   const putItemParams = {
     TableName: tableName,
-    Item: postItem,
+    Item: addCreateMetaData(postItem, userId),
   };
 
   dynamodb.put(putItemParams, (err, data) => {

@@ -3,4 +3,13 @@ const getUserId = (req) => {
   return userId;
 };
 
-module.exports = { getUserId };
+const userIdErrorHandling = (userId) => {
+  if (!userId) {
+    throw new Error("User not found!");
+  }
+};
+
+module.exports = {
+  getUserId,
+  userIdErrorHandling,
+};
