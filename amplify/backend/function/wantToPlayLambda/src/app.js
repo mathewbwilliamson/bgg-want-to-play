@@ -20,8 +20,10 @@ const {
   addCreateMetaData,
 } = require("./models/wantToPlay.model");
 const { getUserId, userIdErrorHandling } = require("./utilities/user.utils");
-const { getUserCondition } = require("./utilities/db.utils");
-const { getSingleItemFromDb } = require("./repository/wantToPlay.repo");
+const {
+  getSingleItemFromDb,
+  getMultipleItemsFromDb,
+} = require("./repository/wantToPlay.repo");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
@@ -69,31 +71,23 @@ const convertUrlType = (param, type) => {
 /********************************
  * HTTP Get method for list objects *
  ********************************/
-
 app.get(path, async function (req, res) {
-  console.log("DEBUG req.body", req.body);
-  const userId = getUserId(req);
+  try {
+    const userId = getUserId(req);
+    console.log("DEBUG userId", userId);
 
-  if (!userId) {
+    userIdErrorHandling(userId);
+
+    const items = await getMultipleItemsFromDb(userId);
+
+    console.log("DEBUG items", items);
+
+    return res.json(items);
+  } catch (err) {
+    console.log("Error happened, 500 sent", err);
     res.statusCode = 500;
     return res.json({ error: err, url: req.url, body: req.body });
   }
-
-  const queryParams = {
-    TableName: tableName,
-    KeyConditions: getUserCondition(userId),
-  };
-
-  console.log("DEBUG queryParams", queryParams);
-
-  dynamodb.query(queryParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: "Could not load items: " + err });
-    } else {
-      res.json(data.Items);
-    }
-  });
 });
 
 /*****************************************
@@ -119,42 +113,6 @@ app.get(path + "/item" + sortKeyPath, async function (req, res) {
     return res.json({ error: err, url: req.url, body: req.body });
   }
 });
-// app.get(path + "/item" + sortKeyPath, function (req, res) {
-//   const params = {};
-//   const userId = getUserId(req);
-
-//   if (!userId) {
-//     res.statusCode = 500;
-//     return res.json({ error: err, url: req.url, body: req.body });
-//   }
-
-//   params[partitionKeyName] = userId;
-
-//   try {
-//     params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
-//   } catch (err) {
-//     res.statusCode = 500;
-//     res.json({ error: "Wrong column type " + err });
-//   }
-
-//   const getItemParams = {
-//     TableName: tableName,
-//     Key: params,
-//   };
-
-//   dynamodb.get(getItemParams, (err, data) => {
-//     if (err) {
-//       res.statusCode = 500;
-//       res.json({ error: "Could not load items: " + err.message });
-//     } else {
-//       if (data.Item) {
-//         res.json(data.Item);
-//       } else {
-//         res.json(data);
-//       }
-//     }
-//   });
-// });
 
 /************************************
  * HTTP put method for insert object *

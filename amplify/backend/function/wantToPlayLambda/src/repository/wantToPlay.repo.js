@@ -4,11 +4,6 @@ const { getUserCondition } = require("../utilities/db.utils");
 // AWS.config.update({ region: process.env.TABLE_REGION });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const partitionKeyName = "userId";
-const partitionKeyType = "S";
-const sortKeyName = "bggId";
-const sortKeyType = "S";
-
 let tableName = "wantToPlayTbl";
 if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
@@ -20,7 +15,6 @@ const getSingleItemFromDb = async (userId, bggId) => {
       userId: String(userId),
       bggId: String(bggId),
     };
-    console.log("params", params, bggId);
 
     const getItemParams = {
       TableName: tableName,
@@ -28,10 +22,38 @@ const getSingleItemFromDb = async (userId, bggId) => {
     };
     console.log("DEBUG params, getItemParams", params, getItemParams);
 
-    const thing = await dynamodb.get(getItemParams).promise();
-    console.log("THING", thing);
+    const data = await dynamodb.get(getItemParams).promise();
 
-    return thing;
+    console.log("DEBUG data", data);
+    return data.Item;
+  } catch (err) {
+    console.log("ERROR MESSAGE", err.message);
+    throw new Error("Something wrong happened: ", err.message);
+  }
+};
+
+const getMultipleItemsFromDb = async (userId) => {
+  try {
+    const params = {
+      userId: String(userId),
+    };
+
+    const getItemParams = {
+      TableName: tableName,
+      KeyConditionExpression: "#userId = :userId",
+      ExpressionAttributeNames: {
+        "#userId": "userId",
+      },
+      ExpressionAttributeValues: {
+        ":userId": params.userId,
+      },
+    };
+    console.log("DEBUG params, getItemParams", params, getItemParams);
+
+    const data = await dynamodb.query(getItemParams).promise();
+
+    console.log("DEBUG data", data);
+    return data.Items;
   } catch (err) {
     console.log("ERROR MESSAGE", err.message);
     throw new Error("Something wrong happened: ", err.message);
@@ -40,4 +62,5 @@ const getSingleItemFromDb = async (userId, bggId) => {
 
 module.exports = {
   getSingleItemFromDb,
+  getMultipleItemsFromDb,
 };
