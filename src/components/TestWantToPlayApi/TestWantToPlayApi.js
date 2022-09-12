@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  deleteSingleBoardgameFromDb,
   getAllBoardgamesFromDb,
   getSingleBoardgameFromDb,
   postNewWantToPlayEntry,
@@ -72,6 +73,9 @@ export const TestWantToPlayApi = () => {
       />
       <button onClick={() => getSingleBoardgameFromDb(singleGetId)}>
         FETCH SINGLE GAME
+      </button>
+      <button onClick={() => deleteSingleBoardgameFromDb(bggId)}>
+        DELETE SINGLE GAME
       </button>
     </div>
   );

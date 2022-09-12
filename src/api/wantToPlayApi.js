@@ -27,3 +27,10 @@ export const updateWantToPlayEntry = async (body) => {
   };
   return await API.patch(wantToPlayApi, "/want-to-play", payload);
 };
+
+export const deleteSingleBoardgameFromDb = async (bggId) => {
+  if (!bggId) {
+    throw new Error("bggId is required");
+  }
+  return await API.del(wantToPlayApi, `/want-to-play/item/${bggId}`);
+};

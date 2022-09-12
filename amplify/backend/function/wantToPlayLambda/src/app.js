@@ -25,26 +25,14 @@ const {
   getSingleItemFromDb,
   getMultipleItemsFromDb,
   postItemToDb,
+  deleteItemFromDb,
 } = require("./repository/wantToPlay.repo");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
-
-let tableName = "wantToPlayTbl";
-if (process.env.ENV && process.env.ENV !== "NONE") {
-  tableName = tableName + "-" + process.env.ENV;
-}
-
-const userIdPresent = true; // TODO: update in case is required to use that definition
-const partitionKeyName = "userId";
-const partitionKeyType = "S";
 const sortKeyName = "bggId";
-const sortKeyType = "S";
 const hasSortKey = sortKeyName !== "";
 const path = "/want-to-play";
-const UNAUTH = "UNAUTH";
-const hashKeyPath = "/:" + partitionKeyName;
 const sortKeyPath = hasSortKey ? "/:" + sortKeyName : "";
 
 // declare a new express app
@@ -58,16 +46,6 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "*");
   next();
 });
-
-// convert url string param to expected Type
-const convertUrlType = (param, type) => {
-  switch (type) {
-    case "N":
-      return Number.parseInt(param);
-    default:
-      return param;
-  }
-};
 
 /********************************
  * HTTP Get method for list objects *
@@ -192,48 +170,27 @@ app.post(path, async function (req, res) {
 /**************************************
  * HTTP remove method to delete object *
  ***************************************/
+app.delete(path + "/item" + sortKeyPath, async function (req, res) {
+  try {
+    const userId = getUserId(req);
+    console.log("DEBUG userId", userId);
 
-app.delete(path + "/object" + hashKeyPath + sortKeyPath, function (req, res) {
-  const params = {};
-  if (userIdPresent && req.apiGateway) {
-    params[partitionKeyName] =
-      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  } else {
-    params[partitionKeyName] = req.params[partitionKeyName];
-    try {
-      params[partitionKeyName] = convertUrlType(
-        req.params[partitionKeyName],
-        partitionKeyType
-      );
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: "Wrong column type " + err });
-    }
-  }
-  if (hasSortKey) {
-    try {
-      params[sortKeyName] = convertUrlType(
-        req.params[sortKeyName],
-        sortKeyType
-      );
-    } catch (err) {
-      res.statusCode = 500;
-      res.json({ error: "Wrong column type " + err });
-    }
-  }
+    userIdErrorHandling(userId);
 
-  let removeItemParams = {
-    TableName: tableName,
-    Key: params,
-  };
-  dynamodb.delete(removeItemParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url });
-    } else {
-      res.json({ url: req.url, data: data });
+    const bggId = req.params["bggId"];
+
+    if (!bggId) {
+      throw new Error("bggId is required");
     }
-  });
+    console.log("DEBUG bggId", bggId);
+    await deleteItemFromDb(userId, bggId);
+
+    return res.json(`Item with bggId ${bggId} deleted`);
+  } catch (err) {
+    console.log("Error happened, 500 sent", err);
+    res.statusCode = 500;
+    return res.json({ error: err, url: req.url, body: req.body });
+  }
 });
 
 app.listen(3000, function () {

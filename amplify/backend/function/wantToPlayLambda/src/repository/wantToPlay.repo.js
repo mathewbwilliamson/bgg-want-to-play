@@ -74,8 +74,29 @@ const postItemToDb = async (item) => {
   }
 };
 
+const deleteItemFromDb = async (userId, bggId) => {
+  try {
+    const params = {
+      userId: String(userId),
+      bggId: String(bggId),
+    };
+
+    const deleteItemParams = {
+      TableName: tableName,
+      Key: params,
+    };
+    console.log("DEBUG params, deleteItemParams", params, deleteItemParams);
+
+    await dynamodb.delete(deleteItemParams).promise();
+  } catch (err) {
+    console.log("ERROR MESSAGE", err.message);
+    throw new Error("Something wrong happened: ", err.message);
+  }
+};
+
 module.exports = {
   getSingleItemFromDb,
   getMultipleItemsFromDb,
   postItemToDb,
+  deleteItemFromDb,
 };
