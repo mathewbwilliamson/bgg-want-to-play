@@ -18,11 +18,13 @@ const express = require("express");
 const {
   getPlayItemFromRequest,
   addCreateMetaData,
+  addUpdateMetaData,
 } = require("./models/wantToPlay.model");
 const { getUserId, userIdErrorHandling } = require("./utilities/user.utils");
 const {
   getSingleItemFromDb,
   getMultipleItemsFromDb,
+  postItemToDb,
 } = require("./repository/wantToPlay.repo");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
@@ -34,7 +36,6 @@ if (process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + "-" + process.env.ENV;
 }
 
-console.log("woo");
 const userIdPresent = true; // TODO: update in case is required to use that definition
 const partitionKeyName = "userId";
 const partitionKeyType = "S";
@@ -141,34 +142,61 @@ app.put(path, function (req, res) {
 /************************************
  * HTTP post method for insert object *
  *************************************/
+app.post(path, async function (req, res) {
+  try {
+    const userId = getUserId(req);
+    console.log("DEBUG userId", userId);
 
-app.post(path, function (req, res) {
-  console.log("DEBUG POST req.body", req.body);
-  const userId = getUserId(req);
+    userIdErrorHandling(userId);
 
-  if (!userId) {
+    const playItem = getPlayItemFromRequest(req, userId);
+
+    const item = await getSingleItemFromDb(userId, playItem.bggId);
+
+    const itemToSave = item
+      ? addUpdateMetaData(playItem, userId)
+      : addCreateMetaData(playItem, userId);
+
+    await postItemToDb(itemToSave);
+
+    const itemPosted = await getSingleItemFromDb(userId, playItem.bggId);
+
+    console.log("DEBUG itemPosted", itemPosted);
+    return res.json(itemPosted);
+  } catch (err) {
+    console.log("Error happened, 500 sent", err);
     res.statusCode = 500;
     return res.json({ error: err, url: req.url, body: req.body });
   }
-
-  const postItem = getPlayItemFromRequest(req, userId);
-
-  console.log("DEBUG POST postItem", postItem);
-
-  const putItemParams = {
-    TableName: tableName,
-    Item: addCreateMetaData(postItem, userId),
-  };
-
-  dynamodb.put(putItemParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url, body: req.body });
-    } else {
-      res.json({ success: "post call succeed!", url: req.url, data: data });
-    }
-  });
 });
+
+// app.post(path, function (req, res) {
+//   console.log("DEBUG POST req.body", req.body);
+//   const userId = getUserId(req);
+
+//   if (!userId) {
+//     res.statusCode = 500;
+//     return res.json({ error: err, url: req.url, body: req.body });
+//   }
+
+//   const postItem = getPlayItemFromRequest(req, userId);
+
+//   console.log("DEBUG POST postItem", postItem);
+
+//   const putItemParams = {
+//     TableName: tableName,
+//     Item: addCreateMetaData(postItem, userId),
+//   };
+
+//   dynamodb.put(putItemParams, (err, data) => {
+//     if (err) {
+//       res.statusCode = 500;
+//       res.json({ error: err, url: req.url, body: req.body });
+//     } else {
+//       res.json({ success: "post call succeed!", url: req.url, data: data });
+//     }
+//   });
+// });
 
 /**************************************
  * HTTP remove method to delete object *

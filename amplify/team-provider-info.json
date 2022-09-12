@@ -24,7 +24,7 @@
         },
         "wantToPlayLambda": {
           "deploymentBucketName": "amplify-bggwanttoplay-dev-224811-deployment",
-          "s3Key": "amplify-builds/wantToPlayLambda-5039647548507a483558-build.zip"
+          "s3Key": "amplify-builds/wantToPlayLambda-5848565835502b675845-build.zip"
         }
       }
     }

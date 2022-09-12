@@ -1,5 +1,4 @@
 const AWS = require("aws-sdk");
-const { getUserCondition } = require("../utilities/db.utils");
 
 // AWS.config.update({ region: process.env.TABLE_REGION });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
@@ -60,7 +59,23 @@ const getMultipleItemsFromDb = async (userId) => {
   }
 };
 
+const postItemToDb = async (item) => {
+  try {
+    const params = {
+      TableName: tableName,
+      Item: item,
+    };
+    console.log("DEBUG params", params);
+
+    await dynamodb.put(params).promise();
+  } catch (err) {
+    console.log("ERROR MESSAGE", err.message);
+    throw new Error("Something wrong happened: ", err.message);
+  }
+};
+
 module.exports = {
   getSingleItemFromDb,
   getMultipleItemsFromDb,
+  postItemToDb,
 };

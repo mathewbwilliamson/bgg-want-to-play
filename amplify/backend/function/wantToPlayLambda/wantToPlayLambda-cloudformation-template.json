@@ -212,59 +212,6 @@
           ]
         }
       }
-    },
-    "wantToPlayDynDbTriggerPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "lambda-trigger-policy-wantToPlayDynDb",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:DescribeStream",
-                "dynamodb:GetRecords",
-                "dynamodb:GetShardIterator",
-                "dynamodb:ListStreams"
-              ],
-              "Resource": [
-                {
-                  "Ref": "storagewantToPlayDynDbStreamArn"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "wantToPlayDynDbTrigger": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "DependsOn": [
-        "wantToPlayDynDbTriggerPolicy"
-      ],
-      "Properties": {
-        "BatchSize": 100,
-        "Enabled": true,
-        "EventSourceArn": {
-          "Ref": "storagewantToPlayDynDbStreamArn"
-        },
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "LambdaFunction",
-            "Arn"
-          ]
-        },
-        "StartingPosition": "LATEST"
-      }
     }
   },
   "Outputs": {
