@@ -15,7 +15,7 @@
 - DONE How does the template.json match with the template.yml?
 - DONE Add bggApi API: Will be for doing the calls to the BGG API
 - Wanted to remove the old DynamoDB called wantToPlayDynamo but couldn't figure it out quickly
-- Add wantToPlayAPI API: Will be for all things that I want to do after the BGG API, includes connecction to the DB that I setup.
+- DONE Add wantToPlayAPI API: Will be for all things that I want to do after the BGG API, includes connection to the DB that I setup.
 - DONE POST Endpoint
   - isPlayed: boolean
   - bggId: string
@@ -23,10 +23,10 @@
   - playDate: string
   - userId: string
 - In UI for POST, get rid of dummy data
-- PATCH endpoint (scoped by user)
-  - Payload will allowed to be isPlayed, bggId, notes, playDate
-  - Get current item in the DB by bggId and userId === context.userId
-- DELETE endpoint (scoped by user)
+- DONE PATCH endpoint (scoped by user)
+  - DONE Payload will allowed to be isPlayed, bggId, notes, playDate
+  - DONE Get current item in the DB by bggId and userId === context.userId
+- DONE DELETE endpoint (scoped by user)
 - DONE GET one endpoint (scoped by user)
 - DONE GET ALL endpoint (scoped by user)
 - DONE Figure out how to connect the DB into wantToPlayAPI: want-to-play is path
