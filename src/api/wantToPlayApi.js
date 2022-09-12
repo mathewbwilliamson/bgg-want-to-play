@@ -16,3 +16,14 @@ export const postNewWantToPlayEntry = async (body) => {
   };
   return await API.post(wantToPlayApi, "/want-to-play", payload);
 };
+
+export const updateWantToPlayEntry = async (body) => {
+  if (!body.bggId) {
+    throw new Error("bggId is required");
+  }
+
+  const payload = {
+    body,
+  };
+  return await API.patch(wantToPlayApi, "/want-to-play", payload);
+};

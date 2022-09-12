@@ -116,27 +116,46 @@ app.get(path + "/item" + sortKeyPath, async function (req, res) {
 });
 
 /************************************
- * HTTP put method for insert object *
+ * HTTP patch method for insert object *
  *************************************/
+app.patch(path, async function (req, res) {
+  try {
+    const userId = getUserId(req);
+    console.log("DEBUG userId", userId);
 
-app.put(path, function (req, res) {
-  if (userIdPresent) {
-    req.body["userId"] =
-      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  }
+    userIdErrorHandling(userId);
 
-  let putItemParams = {
-    TableName: tableName,
-    Item: req.body,
-  };
-  dynamodb.put(putItemParams, (err, data) => {
-    if (err) {
-      res.statusCode = 500;
-      res.json({ error: err, url: req.url, body: req.body });
-    } else {
-      res.json({ success: "put call succeed!", url: req.url, data: data });
+    const itemChanges = getPlayItemFromRequest(req, userId);
+
+    const bggId = itemChanges.bggId;
+
+    const itemFromDb = await getSingleItemFromDb(userId, bggId);
+
+    console.log("DEBUG itemFromDb", itemFromDb);
+
+    if (!itemFromDb) {
+      throw new Error("Item not found");
     }
-  });
+
+    const updatedItem = addUpdateMetaData(
+      { ...itemFromDb, ...itemChanges },
+      userId
+    );
+
+    console.log("DEBUG updatedItem", updatedItem);
+
+    await postItemToDb(updatedItem);
+
+    const itemPosted = await getSingleItemFromDb(userId, bggId);
+
+    console.log("DEBUG itemPosted", itemPosted);
+
+    return res.json(itemPosted);
+  } catch (err) {
+    console.log("Error happened, 500 sent", err);
+    res.statusCode = 500;
+    return res.json({ error: err.message, url: req.url, body: req.body });
+  }
 });
 
 /************************************
@@ -169,34 +188,6 @@ app.post(path, async function (req, res) {
     return res.json({ error: err, url: req.url, body: req.body });
   }
 });
-
-// app.post(path, function (req, res) {
-//   console.log("DEBUG POST req.body", req.body);
-//   const userId = getUserId(req);
-
-//   if (!userId) {
-//     res.statusCode = 500;
-//     return res.json({ error: err, url: req.url, body: req.body });
-//   }
-
-//   const postItem = getPlayItemFromRequest(req, userId);
-
-//   console.log("DEBUG POST postItem", postItem);
-
-//   const putItemParams = {
-//     TableName: tableName,
-//     Item: addCreateMetaData(postItem, userId),
-//   };
-
-//   dynamodb.put(putItemParams, (err, data) => {
-//     if (err) {
-//       res.statusCode = 500;
-//       res.json({ error: err, url: req.url, body: req.body });
-//     } else {
-//       res.json({ success: "post call succeed!", url: req.url, data: data });
-//     }
-//   });
-// });
 
 /**************************************
  * HTTP remove method to delete object *

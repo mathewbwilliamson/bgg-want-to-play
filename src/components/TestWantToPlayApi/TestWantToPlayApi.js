@@ -1,9 +1,9 @@
 import React from "react";
-import { searchBggApi } from "../../api/bggApi";
 import {
   getAllBoardgamesFromDb,
   getSingleBoardgameFromDb,
   postNewWantToPlayEntry,
+  updateWantToPlayEntry,
 } from "../../api/wantToPlayApi";
 
 export const TestWantToPlayApi = () => {
@@ -47,6 +47,19 @@ export const TestWantToPlayApi = () => {
         onChange={(e) => setNotes(e.target.value)}
       />
       <input type="submit" value="Submit WantToPlay" onClick={handleSubmit} />
+      <button
+        onClick={() => {
+          const payload = {
+            bggId,
+            notes,
+            isPlayed: true,
+            playDate: new Date(),
+          };
+          updateWantToPlayEntry(payload);
+        }}
+      >
+        UPDATE THE BOARDGAME
+      </button>
       <button onClick={() => getAllBoardgamesFromDb()}>
         FETCH ALL USER GAMES
       </button>
